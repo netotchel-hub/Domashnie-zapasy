@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Домашние запасы</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* Вставьте ВЕСЬ CSS код из предыдущего ответа */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, sans-serif; background: #f5f7fa; }
+        /* ... весь остальной CSS ... */
+    </style>
+</head>
+<body>
+    <!-- Вставьте ВЕСЬ HTML код из предыдущего ответа -->
+    <div id="app">
+        <header class="header">...</header>
+        <div class="category-buttons">...</div>
+        <!-- ... весь интерфейс ... -->
+    </div>
+
+    <script>
+        // Конфигурация - ЗАМЕНИТЕ НА СВОИ ДАННЫЕ
+        const SUPABASE_URL = 'https://ВАШ-PROJECT.supabase.co';
+        const SUPABASE_KEY = 'ВАШ-ANON-KEY';
+        
+        let cart = {};
+        const tg = window.Telegram.WebApp;
+        
+        // Функции работы с Supabase
+        async function fetchProducts(category) {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/products?category=eq.${category}`, {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            });
+            return await response.json();
+        }
+        
+        async function createOrder(orderData) {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation'
+                },
+                body: JSON.stringify(orderData)
+            });
+            return await response.json();
+        }
+        
+        // Остальные функции из предыдущего кода
+        function addToCart(productId, name, price) {
+            if (!cart[productId]) cart[productId] = {id: productId, name, price, quantity: 0};
+            cart[productId].quantity++;
+            updateCart();
+        }
+        
+        // ... все остальные функции ...
+        
+        // Инициализация
+        tg.expand();
+        tg.ready();
+    </script>
+</body>
+</html>
